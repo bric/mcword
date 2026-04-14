@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+
+# Editor
+.vscode/
+
+# Temporary / generated files
+t
+openthesaurus.txt
+wortspiel.sqlite
+
+# Claude Code internal memory
+memory/
