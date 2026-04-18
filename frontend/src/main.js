@@ -7,6 +7,7 @@ let guesses = [];
 let currentGuess = '';
 let gameOver = false;
 let validWords = null;
+let animatingRowIndex = -1;
 
 // Lade words.lst synchron beim Start (nur im lokalen Kontext möglich)
 fetch('/words.lst')
@@ -53,6 +54,7 @@ function renderGame() {
     }
     guesses.push(guess);
     currentGuess = guess;
+    animatingRowIndex = guesses.length - 1;
     checkGuess(guess);
     renderGame();
   };
@@ -61,6 +63,7 @@ function renderGame() {
     guesses = [];
     currentGuess = '';
     gameOver = false;
+    animatingRowIndex = -1;
     renderGame();
   };
 }
@@ -171,18 +174,22 @@ function renderBoard() {
           }
         }
       }
+      const hasColor = guess && secretWord && guess.length === 5 && secretWord.length === 5;
       for (let j = 0; j < 5; j++) {
         const cell = document.createElement('div');
         cell.className = 'letter-cell';
         cell.textContent = guess[j] ? guess[j].toUpperCase() : '';
-        if (guess && secretWord && guess.length === 5 && secretWord.length === 5) {
-          if (feedback[j] === 'green') {
-            cell.classList.add('green');
-          } else if (feedback[j] === 'yellow') {
-            cell.classList.add('yellow');
-          } else if (guess[j]) {
-            cell.classList.add('gray');
+        const colorClass = hasColor
+          ? (feedback[j] === 'green' ? 'green' : feedback[j] === 'yellow' ? 'yellow' : guess[j] ? 'gray' : '')
+          : '';
+        if (i === animatingRowIndex) {
+          cell.classList.add('flip');
+          cell.style.animationDelay = `${j * 300}ms`;
+          if (colorClass) {
+            setTimeout(() => cell.classList.add(colorClass), j * 300 + 250);
           }
+        } else {
+          if (colorClass) cell.classList.add(colorClass);
         }
         row.appendChild(cell);
       }
