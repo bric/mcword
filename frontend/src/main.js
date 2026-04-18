@@ -17,6 +17,14 @@ fetch('/words.lst')
   });
 
 
+function showToast(msg, duration = 1500) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
+}
+
 function pickRandomWord() {
   if (!validWords) return '';
   const arr = Array.from(validWords);
@@ -28,8 +36,7 @@ function renderGame() {
     <h1>Wortspiel</h1>
     <div id="board"></div>
     <form class="guess-input" autocomplete="off">
-      <div class="status" id="status"></div>
-      <button type="submit" style="margin-top:12px;display:none;" ${gameOver ? 'disabled' : ''}>Raten</button>
+      <button type="submit" style="display:none;" ${gameOver ? 'disabled' : ''}>Raten</button>
     </form>
   <div id="keyboard" style="margin-top:-10px;"></div>
     <button id="restart">Neues Spiel</button>
@@ -49,7 +56,7 @@ function renderGame() {
       return;
     }
     if (!validWords || !validWords.has(guess)) {
- //     document.getElementById('status').textContent = 'Das Wort ist nicht im Wörterbuch.';
+      showToast('Nicht im Wörterbuch.', 1000);
       return;
     }
     guesses.push(guess);
@@ -337,21 +344,10 @@ function renderKeyboard() {
 function checkGuess(guess) {
   if (guess === secretWord) {
     gameOver = true;
-    setTimeout(() => {
-      const status = document.getElementById('status');
-      if (status) status.textContent = 'Richtig! Du hast das Wort erraten!';
-    }, 0);
+    setTimeout(() => showToast('Richtig! Du hast das Wort erraten!', 3000), 5 * 300 + 500);
   } else if (guesses.length >= 6) {
     gameOver = true;
-    setTimeout(() => {
-      const status = document.getElementById('status');
-      if (status) status.innerHTML = `Leider verloren!<br>Das Lösungswort war: <b>${secretWord.toUpperCase()}</b>`;
-    }, 0);
-  } else {
-    setTimeout(() => {
-      const status = document.getElementById('status');
-      if (status) status.textContent = '';
-    }, 0);
+    setTimeout(() => showToast(`Leider verloren! Das Wort war: ${secretWord.toUpperCase()}`, 4000), 5 * 300 + 500);
   }
 }
 

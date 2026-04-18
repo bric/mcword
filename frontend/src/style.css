@@ -62,8 +62,23 @@ body {
 .letter-cell.flip {
   animation: flip-tile 0.5s ease forwards;
 }
-.status {
-  margin: 16px 0;
-  font-size: 1.2rem;
-  font-weight: 500;
+#toast {
+  position: fixed;
+  top: 260px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 100;
+  white-space: nowrap;
+}
+#toast.show {
+  opacity: 1;
 }
