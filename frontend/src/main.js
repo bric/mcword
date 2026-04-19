@@ -1,5 +1,77 @@
 // Merke das zuletzt fokussierte Eingabefeld für die Bildschirmtastatur
 let letzterFokus = null;
+
+function loadStats() {
+  const match = document.cookie.match(/(?:^|;\s*)wordleStats=([^;]*)/);
+  if (!match) return { gamesPlayed: 0, gamesWon: 0, currentStreak: 0, maxStreak: 0, guessDistribution: [0,0,0,0,0,0] };
+  try { return JSON.parse(decodeURIComponent(match[1])); }
+  catch { return { gamesPlayed: 0, gamesWon: 0, currentStreak: 0, maxStreak: 0, guessDistribution: [0,0,0,0,0,0] }; }
+}
+
+function saveStats(stats) {
+  const expires = new Date();
+  expires.setFullYear(expires.getFullYear() + 1);
+  document.cookie = `wordleStats=${encodeURIComponent(JSON.stringify(stats))};expires=${expires.toUTCString()};path=/`;
+}
+
+function updateStats(won) {
+  const stats = loadStats();
+  stats.gamesPlayed++;
+  if (won) {
+    stats.gamesWon++;
+    stats.currentStreak++;
+    if (stats.currentStreak > stats.maxStreak) stats.maxStreak = stats.currentStreak;
+    stats.guessDistribution[guesses.length - 1]++;
+  } else {
+    stats.currentStreak = 0;
+  }
+  saveStats(stats);
+  return stats;
+}
+
+function showStatsPopup(stats, lastGuessCount) {
+  const existing = document.getElementById('stats-popup');
+  if (existing) existing.remove();
+
+  const winRate = stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0;
+  const maxDist = Math.max(...stats.guessDistribution, 1);
+
+  const overlay = document.createElement('div');
+  overlay.id = 'stats-popup';
+  overlay.innerHTML = `
+    <div class="stats-modal">
+      <h2>Statistik</h2>
+      <div class="stats-numbers">
+        <div class="stat-item"><span class="stat-value">${stats.gamesPlayed}</span><span class="stat-label">Gespielt</span></div>
+        <div class="stat-item"><span class="stat-value">${winRate}%</span><span class="stat-label">Gewonnen</span></div>
+        <div class="stat-item"><span class="stat-value">${stats.currentStreak}</span><span class="stat-label">Serie</span></div>
+        <div class="stat-item"><span class="stat-value">${stats.maxStreak}</span><span class="stat-label">Beste Serie</span></div>
+      </div>
+      <div class="stats-dist">
+        <h3>Ratenverteilung</h3>
+        ${stats.guessDistribution.map((count, i) => `
+          <div class="dist-row">
+            <span class="dist-label">${i + 1}</span>
+            <div class="dist-bar-wrap">
+              <div class="dist-bar${lastGuessCount === i + 1 ? ' dist-bar-highlight' : ''}" style="width:${Math.max(count / maxDist * 100, count > 0 ? 8 : 0)}%">${count}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <button class="stats-ok" id="stats-ok">OK</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  const close = () => {
+    overlay.remove();
+    document.removeEventListener('keydown', onKey);
+  };
+  const onKey = (e) => {
+    if (e.key === 'Enter' || e.key === 'Escape') close();
+  };
+  document.getElementById('stats-ok').onclick = close;
+  document.addEventListener('keydown', onKey);
+}
 const app = document.getElementById('app');
 
 let secretWord = '';
@@ -342,12 +414,15 @@ function renderKeyboard() {
 }
 
 function checkGuess(guess) {
+  const delay = 5 * 300 + 500;
   if (guess === secretWord) {
     gameOver = true;
-    setTimeout(() => showToast('Richtig! Du hast das Wort erraten!', 3000), 5 * 300 + 500);
+    setTimeout(() => showToast('Richtig! Du hast das Wort erraten!', 4000), delay);
+    setTimeout(() => showStatsPopup(updateStats(true), guesses.length), delay + 1000);
   } else if (guesses.length >= 6) {
     gameOver = true;
-    setTimeout(() => showToast(`Leider verloren! Das Wort war: ${secretWord.toUpperCase()}`, 4000), 5 * 300 + 500);
+    setTimeout(() => showToast(`Leider verloren! Das Wort war: ${secretWord.toUpperCase()}`, 5000), delay);
+    setTimeout(() => showStatsPopup(updateStats(false), null), delay + 1000);
   }
 }
 
