@@ -105,13 +105,15 @@ function pickRandomWord() {
 
 function renderGame() {
   app.innerHTML = `
-    <h1>Wortspiel</h1>
+    <div class="app-header">
+      <h1>Wortspiel <span class="app-version">v0.1</span></h1>
+      <button id="restart">Neues Spiel</button>
+    </div>
     <div id="board"></div>
     <form class="guess-input" autocomplete="off">
       <button type="submit" style="display:none;" ${gameOver ? 'disabled' : ''}>Raten</button>
     </form>
-  <div id="keyboard" style="margin-top:-10px;"></div>
-    <button id="restart">Neues Spiel</button>
+    <div id="keyboard" style="margin-top:-10px;"></div>
   `;
   renderKeyboard();
   renderBoard();
@@ -167,7 +169,7 @@ function renderBoard() {
   input.autocomplete = 'off';
   input.style.width = '100%';
   input.style.height = '100%';
-  input.style.fontSize = '2rem';
+  input.style.fontSize = '2.2rem';
   input.style.textAlign = 'center';
   input.style.textTransform = 'uppercase';
   input.style.fontWeight = 'bold';
@@ -370,12 +372,21 @@ function renderKeyboard() {
       }
       btn.onclick = () => {
         if (key === '←') {
-          for (let k = 4; k >= 0; k--) {
-            const inp = document.getElementById(`guess${k}`);
-            if (inp && inp.value) {
-              inp.value = '';
-              inp.focus();
-              break;
+          const target = letzterFokus;
+          if (target && target.id && target.id.startsWith('guess') && !target.disabled) {
+            const idx = parseInt(target.id.replace('guess', ''), 10);
+            if (target.value) {
+              target.value = '';
+              target.focus();
+            } else if (idx > 0) {
+              const prev = document.getElementById(`guess${idx - 1}`);
+              prev.value = '';
+              prev.focus();
+            }
+          } else {
+            for (let k = 4; k >= 0; k--) {
+              const inp = document.getElementById(`guess${k}`);
+              if (inp && inp.value) { inp.value = ''; inp.focus(); break; }
             }
           }
         } else if (key === 'ENTER') {
