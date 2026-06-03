@@ -82,7 +82,7 @@ let validWords = null;
 let animatingRowIndex = -1;
 
 // Lade words.lst synchron beim Start (nur im lokalen Kontext möglich)
-fetch('/words.lst')
+fetch(import.meta.env.BASE_URL + 'words.lst')
   .then(r => r.text())
   .then(text => {
     validWords = new Set(text.split(/\r?\n/).map(w => w.trim().toLowerCase()).filter(w => w.length === 5));
