@@ -1,39 +1,39 @@
 # Wortspiel
 
-A browser-based German word-guessing game inspired by Wordle. Players have 6 attempts to guess a secret 5-letter German word. After each guess, color-coded feedback shows which letters are correct and in the right position (green), correct but in the wrong position (yellow), or not in the word at all (gray).
+Ein browserbasiertes deutsches Worträtsel, inspiriert von Wordle. Die Spieler haben 6 Versuche, ein geheimes deutsches Wort mit 5 Buchstaben zu erraten. Nach jedem Versuch zeigt farblich codiertes Feedback, welche Buchstaben korrekt und an der richtigen Stelle stehen (grün), korrekt aber an der falschen Stelle sind (gelb) oder gar nicht im Wort vorkommen (grau).
 
-## Features
+## Funktionen
 
-- 6×5 game board — up to 6 guesses, each 5 letters
-- Color-coded letter feedback (green / yellow / gray) following Wordle rules
-- On-screen QWERTZ keyboard with per-letter status coloring
-- Word validation against a curated list of 1,540 German 5-letter words
-- "New Game" button to restart with a randomly chosen word
-- Runs entirely in the browser — no backend required
+- 6×5-Spielfeld — bis zu 6 Versuche, je 5 Buchstaben
+- Farblich codiertes Buchstaben-Feedback (grün / gelb / grau) nach Wordle-Regeln
+- Bildschirmtastatur im QWERTZ-Layout mit buchstabengenauer Statusanzeige
+- Wortvalidierung anhand einer kuratierten Liste von 1.540 deutschen 5-Buchstaben-Wörtern
+- Schaltfläche „Neues Spiel" zum Neustart mit einem zufällig gewählten Wort
+- Läuft vollständig im Browser — kein Backend erforderlich
 
 ## Screenshots
 
 ```
-W O R T E      ← gray  / yellow / green / gray  / gray
-S P I E L      ← all revealed after 6 attempts (or win message)
+W O R T E      ← grau  / gelb / grün / grau  / grau
+S P I E L      ← nach 6 Versuchen aufgedeckt (oder Gewinnmeldung)
 ```
 
-## Tech Stack
+## Technologien
 
-| Layer    | Technology                  |
-|----------|-----------------------------|
-| Frontend | Vanilla JavaScript + HTML/CSS |
-| Bundler  | [Vite](https://vitejs.dev/) |
-| Words    | `frontend/words.lst` — 1,540 curated German 5-letter words |
+| Ebene     | Technologie                     |
+|-----------|---------------------------------|
+| Frontend  | Vanilla JavaScript + HTML/CSS   |
+| Bundler   | [Vite](https://vitejs.dev/)     |
+| Wörter    | `frontend/words.lst` — 1.540 kuratierte deutsche 5-Buchstaben-Wörter |
 
-## Getting Started
+## Erste Schritte
 
-### Prerequisites
+### Voraussetzungen
 
-- [Node.js](https://nodejs.org/) 18 or later
-- npm (comes with Node.js)
+- [Node.js](https://nodejs.org/) 18 oder neuer
+- npm (im Lieferumfang von Node.js enthalten)
 
-### Development
+### Entwicklung
 
 ```bash
 cd frontend
@@ -41,9 +41,9 @@ npm install
 npm run dev
 ```
 
-The dev server starts at `http://localhost:5173` and opens the browser automatically.
+Der Entwicklungsserver startet unter `http://localhost:5173` und öffnet den Browser automatisch.
 
-### Production Build
+### Produktions-Build
 
 ```bash
 cd frontend
@@ -51,39 +51,39 @@ npm install
 npm run build
 ```
 
-The compiled output is written to `frontend/dist/`. Serve it with any static file server, e.g.:
+Die kompilierte Ausgabe wird in `frontend/dist/` geschrieben. Mit einem beliebigen Static-File-Server ausliefern, z. B.:
 
 ```bash
-npm run preview   # serves the build locally for testing
+npm run preview   # stellt den Build lokal zum Testen bereit
 ```
 
-## Project Structure
+## Projektstruktur
 
 ```
 mcword/
 ├── frontend/
 │   ├── src/
-│   │   ├── main.js       # game logic and rendering
-│   │   └── style.css     # styles
-│   ├── words.lst         # curated German 5-letter word list
-│   ├── index.html        # entry point
+│   │   ├── main.js       # Spiellogik und Rendering
+│   │   └── style.css     # Styles
+│   ├── words.lst         # kuratierte deutsche 5-Buchstaben-Wortliste
+│   ├── index.html        # Einstiegspunkt
 │   └── package.json
-├── specs/                # feature specs and planning docs
-├── vite.config.js        # Vite config (root → frontend/)
+├── specs/                # Funktionsspezifikationen und Planungsdokumente
+├── vite.config.js        # Vite-Konfiguration (Root → frontend/)
 └── README.md
 ```
 
-## How to Play
+## Spielanleitung
 
-1. The game picks a random secret word from the word list on load.
-2. Type a 5-letter German word using the keyboard or the on-screen QWERTZ pad.
-3. Press **Enter** to submit your guess.
-4. Read the color feedback:
-   - **Green** — correct letter, correct position
-   - **Yellow** — correct letter, wrong position
-   - **Gray** — letter not in the word
-5. You have 6 attempts. Good luck!
+1. Das Spiel wählt beim Laden ein zufälliges geheimes Wort aus der Wortliste.
+2. Tippe ein deutsches Wort mit 5 Buchstaben über die physische Tastatur oder die QWERTZ-Bildschirmtastatur ein.
+3. Drücke **Enter**, um deinen Versuch abzuschicken.
+4. Lies das Farb-Feedback:
+   - **Grün** — richtiger Buchstabe, richtige Position
+   - **Gelb** — richtiger Buchstabe, falsche Position
+   - **Grau** — Buchstabe kommt nicht im Wort vor
+5. Du hast 6 Versuche. Viel Erfolg!
 
-## License
+## Lizenz
 
 MIT
